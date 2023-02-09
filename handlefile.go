@@ -1,12 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
 
-func partition(data []byte, n int) []string {
+type Words struct {
+	Word  string
+	Value int
+}
+
+func Partition(data []byte, n int) []string {
 
 	var newData []string
 
@@ -21,6 +25,19 @@ func partition(data []byte, n int) []string {
 	}
 
 	return newData
+}
+
+func SplitWords(data string) []Words {
+	var result []Words
+	var word Words
+	for _, w := range removeStopWords(scan(data)) {
+		word.Word = w
+		word.Value = 1
+
+		result = append(result, word)
+	}
+
+	return result
 }
 
 func scan(strData string) []string {
@@ -50,45 +67,37 @@ func scan(strData string) []string {
 }
 
 func removeStopWords(data []string) []string {
-
 	var words []string
-	bs := readFile("stop_words.txt")
 
-	sw := strings.Split(string(bs), ",")
+	sw := listStopWord()
 
-	ascii_lowercase := strings.Split("abcdefghijklmnopqrstuvwxyz", "")
-
-	for _, a := range ascii_lowercase {
-		sw = append(sw, a)
-	}
-
-	for _, d := range data {
-		var flag bool = true
-
-		for _, s := range sw {
-			if d == s {
-				flag = false
-			}
-		}
-
-		if flag {
-			words = append(words, d)
+	for _, w := range data {
+		if !isStopWord(w, sw) {
+			words = append(words, w)
 		}
 	}
 
 	return words
 }
 
-func splitWords(data string) {
+func listStopWord() []string {
+	bs := readFile("stop_words.txt")
+	sw := strings.Split(string(bs), ",")
+	ascii_lowercase := strings.Split("abcdefghijklmnopqrstuvwxyz", "")
 
-	var result [][2]string
-
-	fmt.Println(len(result))
-
-	for i, w := range removeStopWords(scan(data)) {
-		result[i][0] = w
-		result[i][1] = "1"
+	for _, a := range ascii_lowercase {
+		sw = append(sw, a)
 	}
 
-	fmt.Println(len(result))
+	return sw
+}
+
+func isStopWord(w string, sw []string) bool {
+	for _, s := range sw {
+		if w == strings.ToLower(s) {
+			return true
+		}
+	}
+
+	return false
 }
