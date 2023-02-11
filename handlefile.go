@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -38,6 +39,21 @@ func SplitWords(data string) []Words {
 	}
 
 	return result
+}
+
+func CountWords(mapList chan []Words, sendFinalValue chan map[string]int) {
+
+	final := make(map[string]int)
+
+	for list := range mapList {
+		for _, value := range list {
+			final[value.Word] += value.Value
+		}
+	}
+
+	fmt.Println(final)
+
+	sendFinalValue <- final
 }
 
 func scan(strData string) []string {
