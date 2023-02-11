@@ -1,12 +1,9 @@
 package main
 
-import "fmt"
-
-func Map(sw func(string) []Words, data string) []Words {
-	fmt.Println(sw(data))
-	return sw(data)
+func Map(data string) []Words {
+	return SplitWords(data)
 }
 
-func Reduce() {
-
+func Reduce(mapList chan []Words, sendFinalValue chan map[string]int) {
+	CountWords(mapList, sendFinalValue)
 }
