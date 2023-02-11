@@ -1,17 +1,35 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"sync"
+)
 
 func main() {
 
-	// splits := make(map[string]int)
+	data := Partition(readFile("republic2.txt"), 200)
 
-	// divide o texto em pedacos menores de 200 linhas
-	data := partition(readFile("republic2.txt"), 200)
+	// Mapper list
+	splits := make(chan []Words)
+
+	// Reduce List
+	wordsFreqs := make(chan map[string]int)
+
+	var wg sync.WaitGroup
+
+	wg.Add(len(data))
 
 	for _, aux := range data {
-		splitWords(aux)
+		go func(data string) {
+			defer wg.Done()
+			splits <- Map(data)
+		}(aux)
 	}
 
-	time.Sleep(time.Second * 5)
+	go Reduce(splits, wordsFreqs)
+
+	wg.Wait()
+	close(splits)
+
+	fmt.Println(<-wordsFreqs)
 }
