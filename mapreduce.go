@@ -12,7 +12,7 @@ func Partition(fileContent []byte, n int) []string {
 	ln := strings.Split(string(fileContent), "\n")
 
 	for i := 0; i < len(ln); i = i + n {
-		pData = append(pData, stringToAppend(i, n, ln))
+		pData = append(pData, contentToAppend(i, n, ln))
 	}
 
 	return pData
@@ -111,7 +111,7 @@ func isStopWord(w string, sw []string) bool {
 	return false
 }
 
-func stringToAppend(i int, n int, ln []string) string {
+func contentToAppend(i int, n int, ln []string) string {
 	if i+n < len(ln) {
 		return strings.Join(ln[i:i+n], "\n")
 	} else {
