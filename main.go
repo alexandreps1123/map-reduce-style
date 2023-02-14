@@ -1,25 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 )
 
+var NUMBER_LINES = 200
+
 func main() {
 
-	data := Partition(readFile("republic2.txt"), 200)
+	var wg sync.WaitGroup
+
+	data := Partition(ReadFile("republic.txt"), NUMBER_LINES)
 
 	// Mapper list
 	splits := make(chan []Words)
 
-	// Reduce List
+	// Reduce map
 	wordsFreqs := make(chan map[string]int)
 
-	var wg sync.WaitGroup
-
-	wg.Add(len(data))
-
 	for _, aux := range data {
+		wg.Add(1)
+
 		go func(data string) {
 			defer wg.Done()
 			splits <- Map(data)
@@ -31,5 +32,5 @@ func main() {
 	wg.Wait()
 	close(splits)
 
-	fmt.Println(<-wordsFreqs)
+	SortAndPrint(<-wordsFreqs)
 }
