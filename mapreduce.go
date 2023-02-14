@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-func Partition(data []byte, n int) []string {
+func Partition(fileContent []byte, n int) []string {
 
 	var pData []string
 
-	ln := strings.Split(string(data), "\n")
+	ln := strings.Split(string(fileContent), "\n")
 
 	for i := 0; i < len(ln); i = i + n {
 		pData = append(pData, stringToAppend(i, n, ln))
