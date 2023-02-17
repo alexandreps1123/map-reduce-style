@@ -20,10 +20,8 @@ func main() {
 
 	data := mapreduce.Partition(utils.ReadFile(os.Args[1]), common.NUMBER_LINES)
 
-	// Mapper list
 	splits := make(chan []common.Words)
 
-	// Reduce map
 	wordsFreqs := make(chan map[string]int)
 
 	for _, aux := range data {
