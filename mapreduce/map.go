@@ -51,7 +51,7 @@ func scan(strData string) []string {
 func removeStopWords(data []string) []string {
 	var words []string
 
-	sw := stopWordsList()
+	sw := stopWordsSlice()
 
 	for _, w := range data {
 		if !isStopWord(w, sw) {
@@ -62,7 +62,7 @@ func removeStopWords(data []string) []string {
 	return words
 }
 
-func stopWordsList() []string {
+func stopWordsSlice() []string {
 	bs := utils.ReadFile("stop_words.txt")
 	sw := strings.Split(string(bs), ",")
 	ascii_lowercase := strings.Split("abcdefghijklmnopqrstuvwxyz", "")
