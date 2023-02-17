@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"sync"
 
@@ -12,6 +13,10 @@ import (
 func main() {
 
 	var wg sync.WaitGroup
+
+	if len(os.Args[0:]) == 1 {
+		log.Fatal("No file to read")
+	}
 
 	data := mapreduce.Partition(utils.ReadFile(os.Args[1]), common.NUMBER_LINES)
 
