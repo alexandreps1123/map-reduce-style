@@ -1,19 +1,22 @@
 package main
 
 import (
+	"os"
 	"sync"
-)
 
-var NUMBER_LINES = 200
+	"github.com/map-reduce-style/common"
+	"github.com/map-reduce-style/mapreduce"
+	"github.com/map-reduce-style/utils"
+)
 
 func main() {
 
 	var wg sync.WaitGroup
 
-	data := Partition(ReadFile("republic.txt"), NUMBER_LINES)
+	data := mapreduce.Partition(utils.ReadFile(os.Args[1]), common.NUMBER_LINES)
 
 	// Mapper list
-	splits := make(chan []Words)
+	splits := make(chan []common.Words)
 
 	// Reduce map
 	wordsFreqs := make(chan map[string]int)
@@ -23,14 +26,14 @@ func main() {
 
 		go func(data string) {
 			defer wg.Done()
-			splits <- Map(data)
+			splits <- mapreduce.Map(data)
 		}(aux)
 	}
 
-	go Reduce(splits, wordsFreqs)
+	go mapreduce.Reduce(splits, wordsFreqs)
 
 	wg.Wait()
 	close(splits)
 
-	SortAndPrint(<-wordsFreqs)
+	utils.SortAndPrint(<-wordsFreqs)
 }
