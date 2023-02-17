@@ -30,6 +30,9 @@ func ReadFile(path string) []byte {
 
 func SortAndPrint(mapToOder map[string]int) {
 	keys := make([]string, 0, len(mapToOder))
+	if len(mapToOder) == 0 {
+		log.Fatal("No output to print")
+	}
 
 	for key := range mapToOder {
 		keys = append(keys, key)
