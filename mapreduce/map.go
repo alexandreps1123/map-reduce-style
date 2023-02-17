@@ -1,34 +1,20 @@
-package main
+package mapreduce
 
 import (
 	"regexp"
 	"strings"
+
+	"github.com/map-reduce-style/common"
+	"github.com/map-reduce-style/utils"
 )
 
-func Partition(fileContent []byte, n int) []string {
-
-	var pData []string
-
-	ln := strings.Split(string(fileContent), "\n")
-
-	for i := 0; i < len(ln); i = i + n {
-		pData = append(pData, contentToAppend(i, n, ln))
-	}
-
-	return pData
-}
-
-func Map(data string) []Words {
+func Map(data string) []common.Words {
 	return splitWords(data)
 }
 
-func Reduce(mapedList chan []Words, sendFinalValue chan map[string]int) {
-	countWords(mapedList, sendFinalValue)
-}
-
-func splitWords(data string) []Words {
-	var result []Words
-	var word Words
+func splitWords(data string) []common.Words {
+	var result []common.Words
+	var word common.Words
 
 	for _, w := range removeStopWords(scan(data)) {
 		word.Word, word.Value = w, 1
@@ -37,19 +23,6 @@ func splitWords(data string) []Words {
 	}
 
 	return result
-}
-
-func countWords(mapedList chan []Words, sendFinalValue chan map[string]int) {
-
-	final := make(map[string]int)
-
-	for list := range mapedList {
-		for _, value := range list {
-			final[value.Word] += value.Value
-		}
-	}
-
-	sendFinalValue <- final
 }
 
 func scan(strData string) []string {
@@ -90,7 +63,7 @@ func removeStopWords(data []string) []string {
 }
 
 func stopWordsList() []string {
-	bs := ReadFile("stop_words.txt")
+	bs := utils.ReadFile("stop_words.txt")
 	sw := strings.Split(string(bs), ",")
 	ascii_lowercase := strings.Split("abcdefghijklmnopqrstuvwxyz", "")
 
@@ -109,12 +82,4 @@ func isStopWord(w string, sw []string) bool {
 	}
 
 	return false
-}
-
-func contentToAppend(i int, n int, ln []string) string {
-	if i+n < len(ln) {
-		return strings.Join(ln[i:i+n], "\n")
-	} else {
-		return strings.Join(ln[i:], "\n")
-	}
 }

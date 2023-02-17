@@ -1,17 +1,12 @@
-package main
+package utils
 
 import (
 	"fmt"
 	"os"
 	"sort"
+
+	"github.com/map-reduce-style/common"
 )
-
-type Words struct {
-	Word  string
-	Value int
-}
-
-var QUANTITY_PRINT = 25
 
 func ReadFile(path string) []byte {
 
@@ -34,7 +29,7 @@ func SortAndPrint(mapToOder map[string]int) {
 		return mapToOder[keys[i]] > mapToOder[keys[j]]
 	})
 
-	for i := 0; i < QUANTITY_PRINT; i++ {
+	for i := 0; i < common.QUANTITY_PRINT; i++ {
 		fmt.Printf("%v - %v\n", keys[i], mapToOder[keys[i]])
 	}
 }
