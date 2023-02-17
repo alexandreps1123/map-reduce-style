@@ -5,6 +5,7 @@
 <p>Baseado no livro <i>Exercises in Programming Style</i> da autora <author>Cristina Lopes</author></p>
 
 <p>Para a execução deve ser informado, via linha de comando, o caminho do arquivo a ser lido</p>
+
 ```
 go run main.go <filepath>
 ```
