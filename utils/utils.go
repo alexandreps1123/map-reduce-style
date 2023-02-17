@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"sort"
 
@@ -10,9 +11,18 @@ import (
 
 func ReadFile(path string) []byte {
 
+	file, err := os.Stat(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if file.Size() == 0 {
+		log.Fatal("Empty file")
+	}
+
 	data, err := os.ReadFile(path)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	return data
